@@ -62,7 +62,7 @@ export default function Footer() {
                 { label: 'Home', href: '#' },
                 { label: 'About Us', href: '#about' },
                 { label: 'Our Services', href: '#services' },
-                { label: 'Book Appointment', href: '#contact' },
+                { label: 'Book Appointment', href: '#booking' },
                 { label: 'Privacy Policy', href: '#' },
               ].map((link) => (
                 <li key={link.label}>
