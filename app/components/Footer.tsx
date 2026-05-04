@@ -109,7 +109,7 @@ export default function Footer() {
             © {new Date().getFullYear()} Steve's Automotive Technology. All rights reserved.
           </p>
           <p className="text-gray-500 text-sm">
-            Designed with care for Lancaster drivers
+            Built by <a href="https://aetherisinnovations.com" target="_blank" rel="noopener noreferrer" className="text-teal-400 hover:text-teal-300 transition-colors">Aetheris Innovations</a> — AI-Powered Business Solutions
           </p>
         </div>
       </div>

@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Phone, Mail, MapPin, Clock, Wrench, ChevronRight, MessageCircle } from 'lucide-react'
+import { Phone, Clock, Wrench, ChevronRight, MessageCircle } from 'lucide-react'
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false)
@@ -12,43 +11,69 @@ export default function ChatBot() {
   const [input, setInput] = useState('')
   const [leadInfo, setLeadInfo] = useState({ name: '', phone: '', service: '' })
   const [step, setStep] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return
 
-    const newMessages = [...messages, { type: 'user', text: input }]
+    const userMessage = input.trim()
+    const newMessages = [...messages, { type: 'user', text: userMessage }]
     setMessages(newMessages)
     setInput('')
+    setIsLoading(true)
 
-    // Simple lead capture flow
-    setTimeout(() => {
-      let botResponse = ''
-      
-      if (step === 0) {
-        botResponse = 'Great! What type of service do you need? (e.g., oil change, hybrid battery, inspection, brakes)'
-        setStep(1)
-        setLeadInfo({ ...leadInfo, service: input })
-      } else if (step === 1) {
-        botResponse = 'Thanks! What\'s your name so we can personalize your experience?'
-        setStep(2)
-        setLeadInfo({ ...leadInfo, service: input })
-      } else if (step === 2) {
-        botResponse = 'Perfect! What\'s the best phone number to reach you? We\'ll call you within 30 minutes during business hours.'
-        setStep(3)
-        setLeadInfo({ ...leadInfo, name: input })
-      } else if (step === 3) {
-        botResponse = `Excellent! We\'ve captured your info:\n\nService: ${leadInfo.service}\nName: ${leadInfo.name}\nPhone: ${input}\n\nOur team will contact you shortly. Need immediate help? Call us at (717) 330-0041.`
-        setStep(4)
-        setLeadInfo({ ...leadInfo, phone: input })
-        
-        // Here you would typically send the lead to your CRM or email
-        console.log('Lead captured:', { ...leadInfo, phone: input })
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: [
+            { role: 'system', content: 'You are a helpful AI assistant for Steve\'s Automotive Technology, an auto repair shop in Lancaster, PA. Be friendly, answer automotive questions, and capture lead info when appropriate. Services: Diagnostics, A/C & Heating, Electrical, Brakes, Oil Changes, Engine Repair, Transmission. Hours: Mon-Fri 8AM-5PM, Sat 8AM-12PM. Phone: (717) 397-3497. Address: 1027 Dillerville Rd #16, Lancaster, PA 17603.' },
+            ...messages.map(m => ({ role: m.type === 'user' ? 'user' : 'assistant', content: m.text })),
+            { role: 'user', content: userMessage }
+          ]
+        })
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setMessages([...newMessages, { type: 'bot', text: data.text || 'I\'d be happy to help! Please call us at (717) 397-3497 for immediate assistance.' }])
       } else {
-        botResponse = 'Is there anything else I can help you with? Feel free to ask about our services, hours, or location!'
+        // Fallback to lead capture flow
+        handleFallbackResponse(newMessages, userMessage)
       }
+    } catch (error) {
+      handleFallbackResponse(newMessages, userMessage)
+    }
 
-      setMessages([...newMessages, { type: 'bot', text: botResponse }])
-    }, 1000)
+    setIsLoading(false)
+  }
+
+  const handleFallbackResponse = (newMessages, userMessage) => {
+    let botResponse = ''
+    
+    if (step === 0) {
+      botResponse = 'Great! What type of service do you need? (e.g., oil change, hybrid battery, inspection, brakes)'
+      setStep(1)
+      setLeadInfo({ ...leadInfo, service: userMessage })
+    } else if (step === 1) {
+      botResponse = 'Thanks! What\'s your name so we can personalize your experience?'
+      setStep(2)
+      setLeadInfo({ ...leadInfo, service: userMessage })
+    } else if (step === 2) {
+      botResponse = 'Perfect! What\'s the best phone number to reach you? We\'ll call you within 30 minutes during business hours.'
+      setStep(3)
+      setLeadInfo({ ...leadInfo, name: userMessage })
+    } else if (step === 3) {
+      botResponse = `Excellent! We\'ve captured your info:\n\nService: ${leadInfo.service}\nName: ${leadInfo.name}\nPhone: ${userMessage}\n\nOur team will contact you shortly. Need immediate help? Call us at (717) 397-3497.`
+      setStep(4)
+      setLeadInfo({ ...leadInfo, phone: userMessage })
+      console.log('Lead captured:', { ...leadInfo, phone: userMessage })
+    } else {
+      botResponse = 'Is there anything else I can help you with? Feel free to ask about our services, hours, or location!'
+    }
+
+    setMessages([...newMessages, { type: 'bot', text: botResponse }])
   }
 
   const quickReplies = [
@@ -78,12 +103,7 @@ export default function ChatBot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.95 }}
-          style={{ position: 'fixed', bottom: '6rem', right: '1.5rem', zIndex: 50, width: '24rem', maxWidth: 'calc(100vw - 3rem)', backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)', border: '1px solid #e5e7eb', overflow: 'hidden' }}
-        >
+        <div className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
           {/* Header */}
           <div className="bg-teal-600 text-white p-4">
             <div className="flex items-center gap-3">
@@ -100,23 +120,27 @@ export default function ChatBot() {
           {/* Messages */}
           <div className="h-80 overflow-y-auto p-4 space-y-4">
             {messages.map((msg, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                style={{ display: 'flex', justifyContent: msg.type === 'user' ? 'flex-end' : 'flex-start' }}
-              >
-                <div
-                  className={`max-w-[80%] p-3 rounded-2xl ${
-                    msg.type === 'user'
-                      ? 'bg-teal-600 text-white rounded-br-none'
-                      : 'bg-gray-100 text-gray-800 rounded-bl-none'
-                  }`}
-                >
+              <div key={idx} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-[80%] p-3 rounded-2xl ${
+                  msg.type === 'user'
+                    ? 'bg-teal-600 text-white rounded-br-none'
+                    : 'bg-gray-100 text-gray-800 rounded-bl-none'
+                }`}>
                   <p className="text-sm whitespace-pre-line">{msg.text}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-gray-100 p-3 rounded-2xl rounded-bl-none">
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
+                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Quick Replies */}
@@ -150,13 +174,28 @@ export default function ChatBot() {
               />
               <button
                 onClick={handleSend}
-                className="bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 transition-colors"
+                disabled={isLoading}
+                className="bg-teal-600 text-white p-2 rounded-lg hover:bg-teal-700 transition-colors disabled:opacity-50"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
             </div>
           </div>
-        </motion.div>
+
+          {/* Contact Info */}
+          <div className="bg-gray-50 p-3 text-center text-xs text-gray-600 border-t">
+            <div className="flex items-center justify-center gap-4">
+              <a href="tel:7173973497" className="flex items-center gap-1 hover:text-teal-600">
+                <Phone className="w-3 h-3" />
+                (717) 397-3497
+              </a>
+              <span className="flex items-center gap-1">
+                <Clock className="w-3 h-3" />
+                Mon-Fri 8AM-5PM
+              </span>
+            </div>
+          </div>
+        </div>
       )}
     </>
   )
