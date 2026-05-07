@@ -2,17 +2,52 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
+
+const siteUrl = 'https://stevesautomotivetechnology.com'
 
 export const metadata: Metadata = {
-  title: 'Steve\'s Automotive Technology | Hybrid Battery Repair Lancaster PA',
-  description: 'Expert auto repair in Lancaster, PA. Hybrid battery specialists. Trusted since 2007. Oil changes, inspections, brakes, A/C repair. Call (717) 330-0041.',
-  keywords: 'auto repair Lancaster PA, hybrid battery repair, car mechanic Lancaster, oil change Lancaster, auto inspection PA, Steve\'s Automotive',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Steve's Automotive Technology | Hybrid Battery Repair Lancaster PA",
+    template: "%s | Steve's Automotive Technology",
+  },
+  description:
+    "Lancaster, PA hybrid battery repair and diagnostic specialists. Steve's Automotive Technology helps drivers save thousands versus dealership replacement quotes. Call (717) 330-0041.",
+  keywords: [
+    'hybrid battery repair Lancaster PA',
+    'hybrid battery diagnostic Lancaster',
+    'Prius battery repair Lancaster',
+    'auto repair Lancaster PA',
+    'Steve\'s Automotive Technology',
+    'Millersville PA mechanic',
+  ],
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'Steve\'s Automotive Technology | Lancaster PA Auto Repair',
-    description: 'Trusted auto repair since 2007. Hybrid battery specialists serving Lancaster & Millersville, PA.',
+    title: "Hybrid Battery Repair Without Dealership Prices",
+    description:
+      "Lancaster's specialist for hybrid battery diagnostics, reconditioning, replacement, and trusted auto repair since 2007.",
+    url: siteUrl,
+    siteName: "Steve's Automotive Technology",
     type: 'website',
     locale: 'en_US',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: "Steve's Automotive Technology hybrid battery diagnostic hero graphic",
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Hybrid Battery Repair Without Dealership Prices",
+    description:
+      "Advanced hybrid battery diagnostics and repair from Steve's Automotive Technology in Lancaster, PA.",
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -25,12 +60,7 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-  },
-  alternates: {
-    canonical: 'https://stevesautomotivetechnology.com',
-  },
+  category: 'automotive repair',
 }
 
 export default function RootLayout({

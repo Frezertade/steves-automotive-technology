@@ -15,9 +15,20 @@ export default function ContactSection() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
+    const subject = encodeURIComponent(`Appointment Request - ${formData.service || 'Auto Repair'}`)
+    const body = encodeURIComponent([
+      `Name: ${formData.name}`,
+      `Phone: ${formData.phone}`,
+      `Email: ${formData.email || 'Not provided'}`,
+      `Service: ${formData.service}`,
+      '',
+      'Vehicle / issue details:',
+      formData.message || 'Not provided',
+    ].join('\n'))
+
+    window.location.href = `mailto:stevesautotech@gmail.com?subject=${subject}&body=${body}`
     setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 5000)
+    setTimeout(() => setSubmitted(false), 7000)
   }
 
   const services = [
@@ -40,7 +51,7 @@ export default function ContactSection() {
             Book Your <span className="text-teal-600">Appointment</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Schedule your service today. We typically respond within 30 minutes during business hours.
+            Request service today. Your email app opens with the appointment details ready to send, or you can call for fastest confirmation.
           </p>
         </div>
 
@@ -53,7 +64,7 @@ export default function ContactSection() {
                   <CheckCircle className="w-16 h-16 text-teal-600 mx-auto mb-4" />
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">Thank You!</h3>
                   <p className="text-gray-600">
-                    We received your request and will call you within 30 minutes.
+                    Your email app will open with the request details. Prefer faster service? Call us directly at (717) 330-0041.
                   </p>
                 </div>
               ) : (
@@ -206,18 +217,29 @@ export default function ContactSection() {
             </div>
 
             {/* Map Embed */}
-            <div className="rounded-xl overflow-hidden h-64 bg-gray-200">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3051.0!2d-76.3234!3d40.0583!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDDCsDAzJzMwLjAiTiA3NsKwMTknMjQuMiJX!5e0!3m2!1sen!2sus!4v1"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Steve's Automotive Technology Location"
-              />
-            </div>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=1027%20Dillerville%20Rd%20%2316%2C%20Lancaster%2C%20PA%2017603"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative block h-64 overflow-hidden rounded-xl border border-teal-200 bg-slate-950 p-6 text-white shadow-xl"
+              >
+                <div className="absolute inset-0 opacity-35" style={{
+                  backgroundImage: 'linear-gradient(rgba(16,245,212,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(16,245,212,.18) 1px, transparent 1px)',
+                  backgroundSize: '32px 32px',
+                }} />
+                <div className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-teal-300 bg-teal-300/20 shadow-[0_0_45px_rgba(16,245,212,.45)]" />
+                <MapPin className="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 text-teal-200" />
+                <div className="relative z-10 flex h-full flex-col justify-between">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.28em] text-teal-200">Shop Location</p>
+                    <h3 className="mt-3 text-2xl font-black">1027 Dillerville Rd #16</h3>
+                    <p className="text-slate-300">Lancaster, PA 17603</p>
+                  </div>
+                  <div className="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-black text-slate-950 transition-colors group-hover:bg-teal-200">
+                    Open in Google Maps
+                  </div>
+                </div>
+              </a>
           </div>
         </div>
       </div>

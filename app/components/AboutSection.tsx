@@ -1,6 +1,7 @@
 'use client'
 
-import { MapPin, Clock, Phone, CheckCircle } from 'lucide-react'
+import Image from 'next/image'
+import { MapPin, Phone, CheckCircle } from 'lucide-react'
 
 export default function AboutSection() {
   return (
@@ -64,10 +65,13 @@ export default function AboutSection() {
           <div>
             <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
               <div className="aspect-square bg-gray-200 relative">
-                <img
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80"
-                  alt="Getachew Hirpo - Office Manager"
-                  className="w-full h-full object-cover"
+                <Image
+                  src="/media/shop-diagnostic-bay.jpg"
+                  alt="Premium hybrid diagnostic bay illustration for Steve's Automotive Technology"
+                  fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  priority={false}
+                  className="object-cover"
                 />
               </div>
               <div className="p-6">

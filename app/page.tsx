@@ -27,7 +27,7 @@ export default function Home() {
               Book Your Appointment
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              See real-time availability and book your service online. No phone calls needed!
+              Send a fast appointment request with your preferred date, time, vehicle, and service details.
             </p>
           </div>
           <AppointmentBooking />

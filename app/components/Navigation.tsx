@@ -7,7 +7,7 @@ const navLinks = [
   { label: 'Home', href: '#' },
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
-{ label: 'Book Appointment', href: '#booking' },
+  { label: 'Book Appointment', href: '#booking' },
 ]
 
 export default function Navigation() {
@@ -25,23 +25,21 @@ export default function Navigation() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed left-0 right-0 top-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-lg'
-            : 'bg-transparent'
+            ? 'border-b border-slate-200/70 bg-white/94 shadow-lg shadow-slate-950/5 backdrop-blur-xl'
+            : 'bg-gradient-to-b from-slate-950/95 to-slate-950/0'
         }`}
       >
         {/* Top Bar */}
-        <div className={`${isScrolled ? 'hidden' : 'block'} bg-slate-900 text-white py-2`}>
-          <div className="container-custom flex justify-between items-center text-sm">
-            <div className="flex items-center gap-4">
-              <a href="tel:7173300041" className="flex items-center gap-2 hover:text-teal-400 transition-colors">
-                <Phone className="w-4 h-4" />
-                (717) 330-0041
-              </a>
-            </div>
-            <div className="hidden sm:flex items-center gap-4">
-              <span className="text-gray-400">Mon-Fri: 8:30AM-5PM | Sat: 8:30AM-1PM</span>
+        <div className={`${isScrolled ? 'hidden' : 'block'} border-b border-white/10 bg-slate-950/78 py-2 text-white backdrop-blur-xl`}>
+          <div className="container-custom flex items-center justify-between text-sm">
+            <a href="tel:7173300041" className="flex items-center gap-2 font-semibold text-teal-100 transition-colors hover:text-teal-300">
+              <Phone className="h-4 w-4 text-teal-300" />
+              (717) 330-0041
+            </a>
+            <div className="hidden items-center gap-4 sm:flex">
+              <span className="text-slate-300">Mon-Fri: 8:30AM-5PM | Sat: 8:30AM-1PM</span>
             </div>
           </div>
         </div>
@@ -51,25 +49,27 @@ export default function Navigation() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <a href="#" className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                isScrolled ? 'bg-teal-600' : 'bg-white/20 backdrop-blur-sm'
+              <div className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${
+                isScrolled
+                  ? 'border-slate-200 bg-slate-950 text-teal-300 shadow-lg shadow-slate-950/10'
+                  : 'border-white/15 bg-white/10 text-teal-200 shadow-[0_0_24px_rgba(16,245,212,0.14)] backdrop-blur-md'
               }`}>
-                <Wrench className={`w-5 h-5 ${isScrolled ? 'text-white' : 'text-white'}`} />
+                <Wrench className="h-5 w-5" />
               </div>
-              <div className={isScrolled ? 'text-slate-900' : 'text-white'}>
-                <div className="font-bold text-lg leading-tight">Steve's Auto</div>
-                <div className="text-xs opacity-80">Technology</div>
+              <div className={isScrolled ? 'text-slate-950' : 'text-white'}>
+                <div className="text-lg font-black leading-tight tracking-[-0.03em]">Steve's Auto</div>
+                <div className={`text-xs font-semibold uppercase tracking-[0.18em] ${isScrolled ? 'text-slate-500' : 'text-teal-100/75'}`}>Technology</div>
               </div>
             </a>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden items-center gap-7 md:flex">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className={`font-medium hover:text-teal-500 transition-colors ${
-                    isScrolled ? 'text-slate-700' : 'text-white/90'
+                  className={`text-sm font-bold transition-colors hover:text-teal-400 ${
+                    isScrolled ? 'text-slate-700' : 'text-white/88'
                   }`}
                 >
                   {link.label}
@@ -77,7 +77,7 @@ export default function Navigation() {
               ))}
               <a
                 href="tel:7173300041"
-                className="bg-teal-600 text-white px-5 py-2.5 rounded-lg font-semibold hover:bg-teal-700 transition-colors"
+                className="rounded-2xl bg-teal-300 px-5 py-2.5 text-sm font-black text-slate-950 shadow-lg shadow-teal-500/20 transition-all hover:-translate-y-0.5 hover:bg-white"
               >
                 Call Now
               </a>
@@ -86,11 +86,12 @@ export default function Navigation() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`md:hidden p-2 rounded-lg ${
-                isScrolled ? 'text-slate-900' : 'text-white'
+              className={`rounded-xl p-2 md:hidden ${
+                isScrolled ? 'text-slate-950' : 'text-white'
               }`}
+              aria-label="Toggle navigation menu"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
@@ -98,28 +99,27 @@ export default function Navigation() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-white pt-24 px-6 animate-fade-in"
-        >
-            <nav className="flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-2xl font-semibold text-slate-900 py-3 border-b border-gray-100"
-                >
-                  {link.label}
-                </a>
-              ))}
+        <div className="fixed inset-0 z-40 bg-slate-950 px-6 pt-28 text-white animate-fade-in">
+          <nav className="flex flex-col gap-4">
+            {navLinks.map((link) => (
               <a
-                href="tel:7173300041"
-                className="mt-4 bg-teal-600 text-white text-center py-4 rounded-xl font-semibold text-lg"
+                key={link.label}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="border-b border-white/10 py-3 text-2xl font-semibold text-white"
               >
-                Call (717) 330-0041
+                {link.label}
               </a>
-            </nav>
-          </div>
-        )}
+            ))}
+            <a
+              href="tel:7173300041"
+              className="mt-4 rounded-2xl bg-teal-300 py-4 text-center text-lg font-black text-slate-950"
+            >
+              Call (717) 330-0041
+            </a>
+          </nav>
+        </div>
+      )}
     </>
   )
 }

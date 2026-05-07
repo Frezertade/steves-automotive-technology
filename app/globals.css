@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --primary: #0d9488;
-  --primary-dark: #0f766e;
-  --secondary: #1e293b;
+  --primary: #10f5d4;
+  --primary-dark: #0d9488;
+  --secondary: #0b1120;
   --accent: #f59e0b;
   --background: #ffffff;
-  --foreground: #0f172a;
+  --foreground: #07111f;
 }
 
 @layer base {
@@ -17,33 +17,77 @@
   }
   
   body {
-    @apply text-gray-900 antialiased;
+    @apply bg-white text-slate-950 antialiased;
+  }
+
+  ::selection {
+    background: rgba(16, 245, 212, 0.32);
+    color: #ffffff;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-teal-600 text-white px-6 py-3 rounded-lg font-semibold 
-           hover:bg-teal-700 transition-all duration-300 
-           hover:shadow-lg hover:-translate-y-0.5;
+    @apply rounded-2xl bg-teal-300 px-6 py-3 font-bold text-slate-950
+           shadow-lg shadow-teal-500/25 transition-all duration-300
+           hover:-translate-y-0.5 hover:bg-white hover:shadow-teal-400/40;
   }
   
   .btn-secondary {
-    @apply bg-slate-800 text-white px-6 py-3 rounded-lg font-semibold 
-           hover:bg-slate-900 transition-all duration-300;
+    @apply rounded-2xl bg-slate-950 px-6 py-3 font-bold text-white
+           transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800;
   }
   
   .section-padding {
-    @apply py-16 md:py-24 px-4 sm:px-6 lg:px-8;
+    @apply px-4 py-20 sm:px-6 md:py-24 lg:px-8;
   }
   
   .container-custom {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .premium-card {
+    @apply rounded-[1.75rem] border border-slate-200/80 bg-white shadow-xl shadow-slate-950/[0.04]
+           transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-teal-950/[0.10];
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(rgba(16, 245, 212, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(circle at 72% 40%, black 0%, transparent 72%);
+  }
+
+  .diagnostic-border {
+    position: relative;
+  }
+
+  .diagnostic-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(16,245,212,0.5), rgba(56,189,248,0.2), rgba(255,255,255,0.08));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

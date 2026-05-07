@@ -1,0 +1,10 @@
+{
+  "name": "Steve's Automotive Technology",
+  "short_name": "Steve's Auto Tech",
+  "description": "Lancaster, PA hybrid battery repair and trusted automotive diagnostics.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070A",
+  "theme_color": "#10F5D4",
+  "icons": []
+}
