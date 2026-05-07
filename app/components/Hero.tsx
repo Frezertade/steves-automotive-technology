@@ -11,8 +11,8 @@ const proofPoints = [
 export default function Hero() {
   return (
     <section className="relative min-h-screen overflow-hidden bg-[#05070A] pt-32 text-white lg:pt-28">
-      {/* Cinematic video background */}
-      <div className="absolute inset-0 opacity-45">
+      {/* Cinematic video background: desktop only so mobile/tablet copy never sits on top of the 3D visual */}
+      <div className="absolute inset-0 hidden opacity-45 lg:block">
         <video
           className="h-full w-full object-cover"
           src="/media/hybrid-battery-diagnostic-loop.mp4"
@@ -27,20 +27,21 @@ export default function Hero() {
       </div>
 
       {/* Tech pattern overlays */}
-      <div className="absolute inset-0 hero-grid opacity-60" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,245,212,0.16),transparent_32%),linear-gradient(180deg,#05070A_0%,#07111A_48%,#05070A_100%)] lg:hidden" aria-hidden="true" />
+      <div className="absolute inset-0 hero-grid opacity-45 lg:opacity-60" aria-hidden="true" />
       <div className="absolute left-0 top-0 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl" aria-hidden="true" />
       <div className="absolute bottom-0 right-0 h-80 w-80 rounded-full bg-sky-400/20 blur-3xl" aria-hidden="true" />
 
-      <div className="container-custom relative z-10 flex min-h-[calc(100vh-7rem)] items-center py-14">
-        <div className="grid w-full items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="container-custom relative z-10 flex min-h-[calc(100vh-7rem)] items-center py-10 sm:py-12 lg:py-14">
+        <div className="grid w-full items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           {/* Copy */}
-          <div className="max-w-3xl animate-fade-in text-left">
+          <div className="order-2 max-w-3xl animate-fade-in text-left lg:order-1">
             <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-teal-300/30 bg-teal-300/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.22em] text-teal-200 shadow-[0_0_35px_rgba(16,245,212,0.16)]">
               <span className="h-2 w-2 rounded-full bg-teal-300 shadow-[0_0_14px_#10F5D4]" />
               Lancaster Hybrid Diagnostic Lab
             </div>
 
-            <h1 className="max-w-4xl text-balance text-5xl font-black leading-[0.95] tracking-[-0.055em] text-white sm:text-6xl md:text-7xl xl:text-8xl">
+            <h1 className="max-w-4xl text-balance text-4xl font-black leading-[0.98] tracking-[-0.05em] text-white sm:text-6xl md:text-7xl xl:text-8xl">
               Hybrid Battery Repair{' '}
               <span className="bg-gradient-to-r from-teal-200 via-teal-300 to-sky-300 bg-clip-text text-transparent">
                 Without Dealership Prices
@@ -82,10 +83,10 @@ export default function Hero() {
           </div>
 
           {/* Video presentation panel */}
-          <div className="relative lg:block">
+          <div className="order-1 relative mt-0 lg:order-2 lg:mt-0 lg:block">
             <div className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-teal-300/20 via-sky-400/10 to-transparent blur-2xl" aria-hidden="true" />
             <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-[#0B1120]/78 p-3 shadow-2xl shadow-teal-950/50 backdrop-blur-xl">
-              <div className="relative aspect-[16/11] overflow-hidden rounded-[1.45rem] bg-slate-950">
+              <div className="relative aspect-video overflow-hidden rounded-[1.45rem] bg-slate-950 lg:aspect-[16/11]">
                 <video
                   className="h-full w-full object-cover"
                   src="/media/hybrid-battery-diagnostic-loop.mp4"
@@ -97,10 +98,10 @@ export default function Hero() {
                   aria-label="Decorative 3D-style hybrid battery diagnostic animation"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent" />
-                <div className="absolute left-5 top-5 rounded-full border border-teal-200/25 bg-slate-950/60 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-teal-100 backdrop-blur-md">
+                <div className="absolute left-4 top-4 hidden rounded-full border border-teal-200/25 bg-slate-950/60 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-teal-100 backdrop-blur-md sm:left-5 sm:top-5 sm:block">
                   Live Diagnostic Visual
                 </div>
-                <div className="absolute bottom-5 left-5 right-5 grid gap-3 sm:grid-cols-3">
+                <div className="hidden sm:absolute sm:bottom-5 sm:left-5 sm:right-5 sm:grid sm:gap-3 sm:grid-cols-3">
                   {[
                     ['98.7%', 'Cell Balance'],
                     ['17+', 'Years Trusted'],
