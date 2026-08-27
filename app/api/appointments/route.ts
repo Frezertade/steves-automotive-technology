@@ -46,6 +46,8 @@ function isValidPhone(value: string) {
 }
 
 function validate(body: Record<string, unknown>): { ok: true; data: AppointmentInput } | { ok: false; error: string } {
+  const source = asString(body.source, 40) || 'booking'
+  const isContact = source === 'contact'
   const data: AppointmentInput = {
     name: asString(body.name, 120),
     phone: asString(body.phone, 40),
@@ -55,14 +57,29 @@ function validate(body: Record<string, unknown>): { ok: true; data: AppointmentI
     email: asString(body.email, 160),
     vehicle: asString(body.vehicle, 160),
     notes: asString(body.notes, MAX_NOTES),
-    source: asString(body.source, 40) || 'booking',
+    source,
   }
 
-  if (!data.name || !data.phone || !data.service || !data.date || !data.time) {
-    return { ok: false, error: 'Name, phone, service, date, and time are required.' }
+  if (!data.name || !data.phone) {
+    return { ok: false, error: isContact ? 'Name and phone are required.' : 'Name, phone, service, date, and time are required.' }
   }
   if (!isValidPhone(data.phone)) {
     return { ok: false, error: 'Enter a valid phone number with at least 10 digits.' }
+  }
+
+  if (isContact) {
+    if (!data.service) data.service = 'Question / callback'
+    if (data.date && !isValidDate(data.date)) {
+      return { ok: false, error: 'Enter a valid preferred date.' }
+    }
+    if (data.time && !isValidTime(data.time)) {
+      return { ok: false, error: 'Enter a valid preferred time.' }
+    }
+    return { ok: true, data }
+  }
+
+  if (!data.service || !data.date || !data.time) {
+    return { ok: false, error: 'Name, phone, service, date, and time are required.' }
   }
   if (!isValidDate(data.date)) {
     return { ok: false, error: 'Enter a valid preferred date.' }
@@ -108,8 +125,11 @@ async function emailAppointment(record: AppointmentInput & { id: string; created
 
   const to = process.env.LEAD_INBOX?.trim() || 'stevesautotech@gmail.com'
   const from = process.env.LEAD_FROM?.trim() || "Steve's Automotive Technology <onboarding@resend.dev>"
+  const isContact = record.source === 'contact'
   const text = [
-    'New appointment request from stevesautomotivetechnology.com',
+    isContact
+      ? 'New contact / callback request from stevesautomotivetechnology.com'
+      : 'New appointment request from stevesautomotivetechnology.com',
     '',
     `ID: ${record.id}`,
     `Received: ${record.createdAt}`,
@@ -119,8 +139,8 @@ async function emailAppointment(record: AppointmentInput & { id: string; created
     `Email: ${record.email || 'Not provided'}`,
     `Vehicle: ${record.vehicle || 'Not provided'}`,
     `Service: ${record.service}`,
-    `Preferred date: ${record.date}`,
-    `Preferred time: ${record.time}`,
+    `Preferred date: ${record.date || 'Not provided'}`,
+    `Preferred time: ${record.time || 'Not provided'}`,
     `Notes: ${record.notes || 'None'}`,
     '',
     `Call the customer or confirm at ${SHOP_PHONE}.`,
@@ -136,7 +156,7 @@ async function emailAppointment(record: AppointmentInput & { id: string; created
       body: JSON.stringify({
         from,
         to: [to],
-        subject: `Appointment request: ${record.service}`,
+        subject: `${isContact ? 'Contact request' : 'Appointment request'}: ${record.service}`,
         text,
         ...(record.email ? { reply_to: record.email } : {}),
       }),

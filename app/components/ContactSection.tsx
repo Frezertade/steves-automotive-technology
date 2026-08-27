@@ -3,6 +3,8 @@
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
 
+const SHOP_PHONE = '(717) 330-0041'
+
 export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: '',
@@ -12,23 +14,42 @@ export default function ContactSection() {
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const [delivered, setDelivered] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const subject = encodeURIComponent(`Appointment Request - ${formData.service || 'Auto Repair'}`)
-    const body = encodeURIComponent([
-      `Name: ${formData.name}`,
-      `Phone: ${formData.phone}`,
-      `Email: ${formData.email || 'Not provided'}`,
-      `Service: ${formData.service}`,
-      '',
-      'Vehicle / issue details:',
-      formData.message || 'Not provided',
-    ].join('\n'))
+    setSubmitting(true)
+    setError('')
 
-    window.location.href = `mailto:stevesautotech@gmail.com?subject=${subject}&body=${body}`
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 7000)
+    try {
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          service: formData.service || 'Question / callback',
+          notes: formData.message,
+          source: 'contact',
+        }),
+      })
+
+      const payload = await response.json().catch(() => null)
+      if (!response.ok || !payload?.ok) {
+        setError(payload?.error || `Could not send the request. Call ${SHOP_PHONE}.`)
+        return
+      }
+
+      setDelivered(Boolean(payload.delivered))
+      setSubmitted(true)
+    } catch {
+      setError(`Could not send the request. Call ${SHOP_PHONE}.`)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const services = [
@@ -48,10 +69,10 @@ export default function ContactSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Book Your <span className="text-teal-600">Appointment</span>
+            Ask a Question / Request a <span className="text-teal-600">Callback</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Request service today. Your email app opens with the appointment details ready to send, or you can call for fastest confirmation.
+            Questions about hybrid battery repair or general service? Send a message and we will call you back, or call {SHOP_PHONE} for the fastest answer.
           </p>
         </div>
 
@@ -62,13 +83,32 @@ export default function ContactSection() {
               {submitted ? (
                 <div className="text-center py-12">
                   <CheckCircle className="w-16 h-16 text-teal-600 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Thank You!</h3>
-                  <p className="text-gray-600">
-                    Your email app will open with the request details. Prefer faster service? Call us directly at (717) 330-0041.
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                    {delivered ? 'Message Sent' : 'Request Recorded'}
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    {delivered
+                      ? `Steve's team has been emailed your details. For fastest confirmation, call ${SHOP_PHONE}.`
+                      : `Your request was recorded. Call ${SHOP_PHONE} to confirm.`}
                   </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSubmitted(false)
+                      setDelivered(false)
+                    }}
+                    className="text-sm font-semibold text-teal-700 hover:text-teal-900"
+                  >
+                    Send another message
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {error && (
+                    <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                      {error}
+                    </div>
+                  )}
                   <div className="grid sm:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -113,10 +153,9 @@ export default function ContactSection() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Service Needed *
+                      Service Needed
                     </label>
                     <select
-                      required
                       value={formData.service}
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
                       className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
@@ -145,10 +184,11 @@ export default function ContactSection() {
 
                   <button
                     type="submit"
-                    className="w-full bg-teal-600 text-white py-4 rounded-lg font-semibold hover:bg-teal-700 transition-colors flex items-center justify-center gap-2"
+                    disabled={submitting}
+                    className="w-full bg-teal-600 text-white py-4 rounded-lg font-semibold hover:bg-teal-700 transition-colors flex items-center justify-center gap-2 disabled:cursor-wait disabled:opacity-70"
                   >
                     <Send className="w-5 h-5" />
-                    Request Appointment
+                    {submitting ? 'Sending…' : 'Request a Callback'}
                   </button>
                 </form>
               )}
