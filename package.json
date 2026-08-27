@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {
     "autoprefixer": "^10.4.16",

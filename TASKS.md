@@ -9,8 +9,8 @@ Branch: `wip/system-complete`. **Never `git push`.** Push happens once, after ev
 ## Status
 
 - current: none
-- completed: 10/12
-- last_completed: S10
+- completed: 11/12
+- last_completed: S11
 
 ## Backlog
 
@@ -24,7 +24,7 @@ Branch: `wip/system-complete`. **Never `git push`.** Push happens once, after ev
 - [x] **S08** Testimonials honesty. Keep the Jeremy Metze hybrid-battery quote (it reads like a real review). If other quotes are generic placeholders, label the section “Customer comments” or keep only sourced reviews. Do not invent new 5-star names. Done when: no unsourced full-name fake reviews remain.
 - [x] **S09** Shared shop constants. Create `lib/shop.ts` (phone, email, address, hours, services list) and use it from nav, footer, schema, booking, chat, contact. Done when: the phone number is not copy-pasted as a raw string in 6+ components.
 - [x] **S10** Product README. How to run, env vars, booking API, design rules pointer to DESIGN.md, do not push until TASKS.md is complete. Done when: a stranger can run the shop site from README.
-- [ ] **S11** Smoke tests. Add `scripts/smoke.mjs` that fails if TASKS still has `- [ ]` (except after all done), if static export is still on, or if `/api/appointments` / `/api/chat` are missing. Add `npm run smoke`. Done when: `npm run smoke` and `npm run build` pass.
+- [x] **S11** Smoke tests. Add `scripts/smoke.mjs` that fails if TASKS still has `- [ ]` (except after all done), if static export is still on, or if `/api/appointments` / `/api/chat` are missing. Add `npm run smoke`. Done when: `npm run smoke` and `npm run build` pass.
 - [ ] **S12** Final shop QA pass. Hero still shows hybrid-battery CTA + `(717) 330-0041`. Booking, services, contact, chat compile. Reduced-motion / poster still present for the hero video. Done when: `npm run build` passes and those surfaces still exist.
 
 ## Done rule
