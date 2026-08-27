@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Menu, X, Phone, Wrench } from 'lucide-react'
 
 const navLinks = [
-  { label: 'Home', href: '#' },
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Book Appointment', href: '#booking' },
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/#about' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Book Appointment', href: '/#booking' },
 ]
 
 export default function Navigation() {
@@ -48,7 +49,7 @@ export default function Navigation() {
         <div className="container-custom py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <a href="#" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <div className={`flex h-11 w-11 items-center justify-center rounded-2xl border transition-all ${
                 isScrolled
                   ? 'border-slate-200 bg-slate-950 text-teal-300 shadow-lg shadow-slate-950/10'
@@ -60,7 +61,7 @@ export default function Navigation() {
                 <div className="text-lg font-black leading-tight tracking-[-0.03em]">Steve's Auto</div>
                 <div className={`text-xs font-semibold uppercase tracking-[0.18em] ${isScrolled ? 'text-slate-500' : 'text-teal-100/75'}`}>Technology</div>
               </div>
-            </a>
+            </Link>
 
             {/* Desktop Nav */}
             <nav className={`hidden items-center gap-2 rounded-2xl border px-2 py-2 md:flex ${
@@ -69,7 +70,7 @@ export default function Navigation() {
                 : 'border-white/20 bg-white/95 shadow-[0_18px_48px_rgba(0,0,0,0.42)] backdrop-blur-xl'
             }`}>
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.label}
                   href={link.href}
                   className={`rounded-xl px-3.5 py-2 text-sm font-black tracking-[-0.01em] transition-all ${
@@ -79,7 +80,7 @@ export default function Navigation() {
                   }`}
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
               <a
                 href="tel:7173300041"
@@ -110,14 +111,14 @@ export default function Navigation() {
         <div className="fixed inset-0 z-40 bg-slate-950 px-6 pt-28 text-white animate-fade-in">
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="border-b border-white/10 py-3 text-2xl font-semibold text-white"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
             <a
               href="tel:7173300041"

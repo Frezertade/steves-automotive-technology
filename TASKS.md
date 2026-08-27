@@ -9,8 +9,8 @@ Branch: `wip/system-complete`. **Never `git push`.** Push happens once, after ev
 ## Status
 
 - current: none
-- completed: 4/12
-- last_completed: S04
+- completed: 5/12
+- last_completed: S05
 
 ## Backlog
 
@@ -18,7 +18,7 @@ Branch: `wip/system-complete`. **Never `git push`.** Push happens once, after ev
 - [x] **S02** Appointment API. Add `POST /api/appointments` that validates name, phone, service, date, time. Persist to `data/appointments.json` when possible. Email via Resend only if `RESEND_API_KEY` is set. Wire `AppointmentBooking` to fetch this API instead of `mailto:`. Success UI must not claim the shop already received mail if `delivered` is false — say the request was recorded and to call `(717) 330-0041` to confirm. Done when: curl POST returns 200 and the booking form no longer depends on the visitor’s mail app.
 - [x] **S03** Contact form uses the same appointment/lead API (`source: "contact"`). Remove the duplicate “Book Your Appointment” heading clash if both sections say the same thing — contact can be “Ask a question / request a callback”. Done when: contact submit hits the API and duplicate H2s are gone.
 - [x] **S04** Shop chatbot with a real backend. Add `POST /api/chat` returning `{ text }`. Knowledge: hybrid battery diagnostics/reconditioning/replacement vs dealer price, hours (Mon–Fri 8:30–5, Sat 8:30–1, Sun closed), address, phone. If no OpenAI key, use keyword + this knowledge (upgrade the current client-only matcher). Done when: the widget talks to `/api/chat` and still works without a key.
-- [ ] **S05** Service detail pages. Add `/services/hybrid-battery`, `/services/inspection`, `/services/brakes` with specialist copy, FAQ, and book/call CTAs. Link from `ServicesSection` cards. Hybrid battery page is the money page. Done when: all three routes build and link from the home services grid.
+- [x] **S05** Service detail pages. Add `/services/hybrid-battery`, `/services/inspection`, `/services/brakes` with specialist copy, FAQ, and book/call CTAs. Link from `ServicesSection` cards. Hybrid battery page is the money page. Done when: all three routes build and link from the home services grid.
 - [ ] **S06** Sitemap + robots include the new service URLs. Keep canonical host `https://stevesautomotivetechnology.com`. Update `public/llms.txt` with those paths. Done when: sitemap lists `/`, the three service pages, `/privacy`.
 - [ ] **S07** Privacy page at `/privacy`, footer link. State: appointment requests, optional chat, no sale of personal data. Done when: route builds and is linked.
 - [ ] **S08** Testimonials honesty. Keep the Jeremy Metze hybrid-battery quote (it reads like a real review). If other quotes are generic placeholders, label the section “Customer comments” or keep only sourced reviews. Do not invent new 5-star names. Done when: no unsourced full-name fake reviews remain.

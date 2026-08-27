@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { Wrench, Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react'
 
 export default function Footer() {
@@ -38,17 +38,17 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Services</h3>
             <ul className="space-y-2">
               {[
-                'Hybrid Battery Repair',
-                'Oil & Filter Change',
-                'Brake Service',
-                'State Inspection',
-                'A/C Repair',
-                'Engine Diagnostics',
+                { label: 'Hybrid Battery Repair', href: '/services/hybrid-battery' },
+                { label: 'Oil & Filter Change', href: '/#services' },
+                { label: 'Brake Service', href: '/services/brakes' },
+                { label: 'State Inspection', href: '/services/inspection' },
+                { label: 'A/C Repair', href: '/#services' },
+                { label: 'Engine Diagnostics', href: '/#services' },
               ].map((service) => (
-                <li key={service}>
-                  <a href="#services" className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
-                    {service}
-                  </a>
+                <li key={service.label}>
+                  <Link href={service.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                    {service.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -59,16 +59,16 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               {[
-                { label: 'Home', href: '#' },
-                { label: 'About Us', href: '#about' },
-                { label: 'Our Services', href: '#services' },
-                { label: 'Book Appointment', href: '#booking' },
+                { label: 'Home', href: '/' },
+                { label: 'About Us', href: '/#about' },
+                { label: 'Our Services', href: '/#services' },
+                { label: 'Book Appointment', href: '/#booking' },
                 { label: 'Privacy Policy', href: '#' },
               ].map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                  <Link href={link.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

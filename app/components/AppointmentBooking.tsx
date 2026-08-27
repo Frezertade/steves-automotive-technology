@@ -38,10 +38,14 @@ function getSlotsForDate(dateValue: string) {
   return slots
 }
 
-export default function AppointmentBooking() {
+export default function AppointmentBooking({
+  defaultService = 'Hybrid Battery Diagnostic',
+}: {
+  defaultService?: string
+}) {
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
-    service: 'Hybrid Battery Diagnostic',
+    service: defaultService,
     date: '',
     time: '',
     name: '',
