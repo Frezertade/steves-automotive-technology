@@ -52,7 +52,7 @@ Defined in [`.env.example`](.env.example):
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `OPENAI_API_KEY` | No | Shop chat (`POST /api/chat`). If unset, replies come from the keyword + shop-knowledge matcher. |
-| `RESEND_API_KEY` | No | Email appointment/contact requests. If unset, the request is still recorded when persist succeeds; the UI must not claim the shop already received mail. |
+| `RESEND_API_KEY` | No for local, **yes in production** | Emails appointment/contact requests via Resend. If unset, `delivered` is `false` and the UI tells the visitor to call. |
 | `LEAD_INBOX` | No | Inbox for those emails. Defaults to `stevesautotech@gmail.com`. |
 | `LEAD_FROM` | No | Resend `from` address. Defaults to `Steve's Automotive Technology <onboarding@resend.dev>` (Resend test sender). |
 

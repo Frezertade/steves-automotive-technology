@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { NextResponse } from 'next/server'
+import { fieldsToHtml, sendTransactionalEmail } from '../../../lib/mail'
 import { shop } from '../../../lib/shop'
 
 export const dynamic = 'force-dynamic'
@@ -119,59 +120,39 @@ async function persistAppointment(record: Record<string, unknown>) {
 }
 
 async function emailAppointment(record: AppointmentInput & { id: string; createdAt: string }) {
-  const apiKey = process.env.RESEND_API_KEY?.trim()
-  if (!apiKey) return false
-
-  const to = process.env.LEAD_INBOX?.trim() || shop.email
-  const from = process.env.LEAD_FROM?.trim() || `${shop.name} <onboarding@resend.dev>`
   const isContact = record.source === 'contact'
   const host = new URL(shop.siteUrl).host
+  const title = isContact
+    ? `New contact / callback request from ${host}`
+    : `New appointment request from ${host}`
+  const rows: Array<[string, string]> = [
+    ['ID', record.id],
+    ['Received', record.createdAt],
+    ['Source', record.source],
+    ['Name', record.name],
+    ['Phone', record.phone],
+    ['Email', record.email || 'Not provided'],
+    ['Vehicle', record.vehicle || 'Not provided'],
+    ['Service', record.service],
+    ['Preferred date', record.date || 'Not provided'],
+    ['Preferred time', record.time || 'Not provided'],
+    ['Notes', record.notes || 'None'],
+  ]
   const text = [
-    isContact
-      ? `New contact / callback request from ${host}`
-      : `New appointment request from ${host}`,
+    title,
     '',
-    `ID: ${record.id}`,
-    `Received: ${record.createdAt}`,
-    `Source: ${record.source}`,
-    `Name: ${record.name}`,
-    `Phone: ${record.phone}`,
-    `Email: ${record.email || 'Not provided'}`,
-    `Vehicle: ${record.vehicle || 'Not provided'}`,
-    `Service: ${record.service}`,
-    `Preferred date: ${record.date || 'Not provided'}`,
-    `Preferred time: ${record.time || 'Not provided'}`,
-    `Notes: ${record.notes || 'None'}`,
+    ...rows.map(([label, value]) => `${label}: ${value}`),
     '',
     `Call the customer or confirm at ${shop.phone}.`,
   ].join('\n')
 
-  try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from,
-        to: [to],
-        subject: `${isContact ? 'Contact request' : 'Appointment request'}: ${record.service}`,
-        text,
-        ...(record.email ? { reply_to: record.email } : {}),
-      }),
-    })
-
-    if (!res.ok) {
-      console.error('[appointments] Resend failed:', res.status, await res.text())
-      return false
-    }
-
-    return true
-  } catch (error) {
-    console.error('[appointments] Resend threw:', error)
-    return false
-  }
+  return sendTransactionalEmail({
+    subject: `${isContact ? 'Contact request' : 'Appointment request'}: ${record.service}`,
+    text,
+    html: fieldsToHtml(title, rows),
+    replyTo: record.email || undefined,
+    idempotencyKey: `shop-appointment-${record.id}`,
+  })
 }
 
 export async function POST(request: Request) {
