@@ -1,7 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import Link from 'next/link'
 import { Wrench, Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react'
+import { shop, shopMailtoHref, shopTelHref } from '../../lib/shop'
 
 export default function Footer() {
   return (
@@ -37,18 +38,11 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Services</h3>
             <ul className="space-y-2">
-              {[
-                'Hybrid Battery Repair',
-                'Oil & Filter Change',
-                'Brake Service',
-                'State Inspection',
-                'A/C Repair',
-                'Engine Diagnostics',
-              ].map((service) => (
-                <li key={service}>
-                  <a href="#services" className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
-                    {service}
-                  </a>
+              {shop.services.map((service) => (
+                <li key={service.name}>
+                  <Link href={service.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                    {service.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -59,16 +53,16 @@ export default function Footer() {
             <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               {[
-                { label: 'Home', href: '#' },
-                { label: 'About Us', href: '#about' },
-                { label: 'Our Services', href: '#services' },
-                { label: 'Book Appointment', href: '#booking' },
-                { label: 'Privacy Policy', href: '#' },
+                { label: 'Home', href: '/' },
+                { label: 'About Us', href: '/#about' },
+                { label: 'Our Services', href: '/#services' },
+                { label: 'Book Appointment', href: '/#booking' },
+                { label: 'Privacy Policy', href: '/privacy' },
               ].map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                  <Link href={link.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -81,20 +75,20 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-400 text-sm">
-                  1027 Dillerville Rd #16<br />
-                  Lancaster, PA 17603
+                  {shop.street}<br />
+                  {shop.city}, {shop.region} {shop.postalCode}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-teal-400 flex-shrink-0" />
-                <a href="tel:7173300041" className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
-                  (717) 330-0041
+                <a href={shopTelHref} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                  {shop.phone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-teal-400 flex-shrink-0" />
-                <a href="mailto:stevesautotech@gmail.com" className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
-                  stevesautotech@gmail.com
+                <a href={shopMailtoHref} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                  {shop.email}
                 </a>
               </li>
             </ul>

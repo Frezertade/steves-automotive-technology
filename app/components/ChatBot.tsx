@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { Phone, Clock, Wrench, ChevronRight, MessageCircle } from 'lucide-react'
+import { shop, shopTelHref } from '../../lib/shop'
 
-const SHOP_PHONE = '(717) 330-0041'
-const SHOP_PHONE_LINK = '7173300041'
+const FALLBACK = `I could not load an answer just now. Call ${shop.phone} and the shop will help.`
 
 const quickReplies = [
   'Hybrid Battery',
@@ -15,42 +15,43 @@ const quickReplies = [
   'Get a Quote',
 ]
 
-function buildResponse(message: string) {
-  const text = message.toLowerCase()
+type ChatMessage = { type: 'user' | 'bot'; text: string }
 
-  if (text.includes('hybrid') || text.includes('battery') || text.includes('prius')) {
-    return `Yes — Steve's Automotive Technology specializes in hybrid battery diagnostics, reconditioning guidance, and replacement options. The fastest next step is to book a hybrid diagnostic or call ${SHOP_PHONE} so the shop can understand the symptoms, mileage, and warning lights.`
-  }
-
-  if (text.includes('price') || text.includes('quote') || text.includes('cost')) {
-    return `For accurate pricing, Steve's team will want the vehicle year/make/model and symptoms. Hybrid battery work can often save thousands versus dealership replacement quotes. Call ${SHOP_PHONE} or send an appointment request with your vehicle details.`
-  }
-
-  if (text.includes('hour') || text.includes('open') || text.includes('time')) {
-    return `Shop hours are Monday-Friday 8:30 AM-5:00 PM and Saturday 8:30 AM-1:00 PM. For fastest service, call ${SHOP_PHONE}.`
-  }
-
-  if (text.includes('where') || text.includes('address') || text.includes('location')) {
-    return `Steve's Automotive Technology is at 1027 Dillerville Rd #16, Lancaster, PA 17603, serving Lancaster and Millersville drivers.`
-  }
-
-  return `I can help with hybrid battery diagnostics, warning lights, inspections, brakes, A/C, oil changes, and general auto repair. For the quickest answer, call ${SHOP_PHONE} or use the appointment form on this page.`
+async function askShop(message: string) {
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message }),
+  })
+  const data = (await res.json().catch(() => null)) as { text?: unknown } | null
+  if (typeof data?.text === 'string' && data.text.trim()) return data.text.trim()
+  throw new Error('empty')
 }
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     { type: 'bot', text: `Hi! I'm Steve's virtual assistant. Ask me about hybrid battery repair, diagnostics, hours, or booking service.` },
   ])
   const [input, setInput] = useState('')
+  const [pending, setPending] = useState(false)
 
-  const handleSend = (preset?: string) => {
+  const handleSend = async (preset?: string) => {
     const userMessage = (preset || input).trim()
-    if (!userMessage) return
+    if (!userMessage || pending) return
 
-    const newMessages = [...messages, { type: 'user', text: userMessage }]
-    setMessages([...newMessages, { type: 'bot', text: buildResponse(userMessage) }])
     setInput('')
+    setPending(true)
+    setMessages((prev) => [...prev, { type: 'user', text: userMessage }])
+
+    try {
+      const text = await askShop(userMessage)
+      setMessages((prev) => [...prev, { type: 'bot', text }])
+    } catch {
+      setMessages((prev) => [...prev, { type: 'bot', text: FALLBACK }])
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -78,7 +79,7 @@ export default function ChatBot() {
             </div>
           </div>
 
-          <div className="h-80 space-y-4 overflow-y-auto p-4">
+          <div className="h-80 space-y-4 overflow-y-auto p-4" aria-busy={pending}>
             {messages.map((msg, idx) => (
               <div key={`${msg.type}-${idx}`} className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[82%] rounded-2xl p-3 ${msg.type === 'user' ? 'rounded-br-none bg-teal-500 text-slate-950' : 'rounded-bl-none bg-slate-100 text-slate-800'}`}>
@@ -86,6 +87,13 @@ export default function ChatBot() {
                 </div>
               </div>
             ))}
+            {pending && (
+              <div className="flex justify-start">
+                <div className="rounded-2xl rounded-bl-none bg-slate-100 px-3 py-2 text-sm text-slate-500">
+                  Checking with the shop…
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap gap-2 px-4 pb-2">
@@ -93,8 +101,9 @@ export default function ChatBot() {
               <button
                 type="button"
                 key={reply}
-                onClick={() => handleSend(reply)}
-                className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 transition-colors hover:bg-teal-100 hover:text-teal-800"
+                disabled={pending}
+                onClick={() => void handleSend(reply)}
+                className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-700 transition-colors hover:bg-teal-100 hover:text-teal-800 disabled:opacity-50"
               >
                 {reply}
               </button>
@@ -106,15 +115,22 @@ export default function ChatBot() {
               <input
                 type="text"
                 value={input}
+                disabled={pending}
                 onChange={(event) => setInput(event.target.value)}
-                onKeyDown={(event) => event.key === 'Enter' && handleSend()}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault()
+                    void handleSend()
+                  }
+                }}
                 placeholder="Type your question..."
-                className="flex-1 rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300"
+                className="flex-1 rounded-xl border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-300 disabled:opacity-60"
               />
               <button
                 type="button"
-                onClick={() => handleSend()}
-                className="rounded-xl bg-slate-950 p-2 text-white transition-colors hover:bg-teal-700"
+                disabled={pending}
+                onClick={() => void handleSend()}
+                className="rounded-xl bg-slate-950 p-2 text-white transition-colors hover:bg-teal-700 disabled:opacity-50"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -123,13 +139,13 @@ export default function ChatBot() {
 
           <div className="border-t bg-slate-50 p-3 text-center text-xs text-slate-600">
             <div className="flex items-center justify-center gap-4">
-              <a href={`tel:${SHOP_PHONE_LINK}`} className="flex items-center gap-1 font-bold hover:text-teal-700">
+              <a href={shopTelHref} className="flex items-center gap-1 font-bold hover:text-teal-700">
                 <Phone className="h-3 w-3" />
-                {SHOP_PHONE}
+                {shop.phone}
               </a>
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                Mon-Fri 8:30-5
+                {shop.hours.chat}
               </span>
             </div>
           </div>

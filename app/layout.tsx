@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { shop } from '../lib/shop'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
-const siteUrl = 'https://stevesautomotivetechnology.com'
+const siteUrl = shop.siteUrl
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | Steve's Automotive Technology",
   },
   description:
-    "Lancaster, PA hybrid battery repair and diagnostic specialists. Steve's Automotive Technology helps drivers save thousands versus dealership replacement quotes. Call (717) 330-0041.",
+    `Lancaster, PA hybrid battery repair and diagnostic specialists. ${shop.name} helps drivers save thousands versus dealership replacement quotes. Call ${shop.phone}.`,
   keywords: [
     'hybrid battery repair Lancaster PA',
     'hybrid battery diagnostic Lancaster',
