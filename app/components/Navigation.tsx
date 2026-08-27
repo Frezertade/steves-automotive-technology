@@ -8,7 +8,7 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/#about' },
   { label: 'Services', href: '/#services' },
-  { label: 'Book Appointment', href: '#booking' },
+  { label: 'Book Appointment', href: '/#booking' },
 ]
 
 export default function Navigation() {
