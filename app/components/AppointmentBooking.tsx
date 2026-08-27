@@ -16,7 +16,6 @@ const SERVICES = [
 
 const SHOP_PHONE = '(717) 330-0041'
 const SHOP_PHONE_LINK = '7173300041'
-const SHOP_EMAIL = 'stevesautotech@gmail.com'
 
 function getSlotsForDate(dateValue: string) {
   if (!dateValue) return []
@@ -52,6 +51,8 @@ export default function AppointmentBooking() {
     notes: '',
   })
   const [requestSent, setRequestSent] = useState(false)
+  const [delivered, setDelivered] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
   const today = new Date().toISOString().split('T')[0]
@@ -63,28 +64,38 @@ export default function AppointmentBooking() {
     setError('')
   }
 
-  const handleRequest = () => {
+  const handleRequest = async () => {
     if (!formData.name || !formData.phone || !formData.service || !formData.date || !formData.time) {
       setError('Please complete the required fields before submitting your request.')
       return
     }
 
-    const subject = encodeURIComponent(`Appointment request: ${formData.service}`)
-    const body = encodeURIComponent([
-      'New appointment request from stevesautomotivetechnology.com',
-      '',
-      `Name: ${formData.name}`,
-      `Phone: ${formData.phone}`,
-      `Email: ${formData.email || 'Not provided'}`,
-      `Vehicle: ${formData.vehicle || 'Not provided'}`,
-      `Service: ${formData.service}`,
-      `Preferred date: ${formData.date}`,
-      `Preferred time: ${formData.time}`,
-      `Notes: ${formData.notes || 'None'}`,
-    ].join('\n'))
+    setSubmitting(true)
+    setError('')
 
-    window.location.href = `mailto:${SHOP_EMAIL}?subject=${subject}&body=${body}`
-    setRequestSent(true)
+    try {
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          source: 'booking',
+        }),
+      })
+
+      const payload = await response.json().catch(() => null)
+      if (!response.ok || !payload?.ok) {
+        setError(payload?.error || `Could not send the request. Call ${SHOP_PHONE} to book.`)
+        return
+      }
+
+      setDelivered(Boolean(payload.delivered))
+      setRequestSent(true)
+    } catch {
+      setError(`Could not send the request. Call ${SHOP_PHONE} to book.`)
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (requestSent) {
@@ -93,16 +104,25 @@ export default function AppointmentBooking() {
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
           <CheckCircle className="h-8 w-8 text-teal-700" />
         </div>
-        <h3 className="mb-2 text-2xl font-black text-slate-950">Appointment Request Ready</h3>
+        <h3 className="mb-2 text-2xl font-black text-slate-950">
+          {delivered ? 'Appointment Request Sent' : 'Appointment Request Recorded'}
+        </h3>
         <p className="mx-auto mb-6 max-w-xl text-slate-600">
-          Your request opened in your email app so Steve's team receives every detail. For fastest confirmation,
-          call the shop now at {SHOP_PHONE}.
+          {delivered
+            ? `Steve's team has been emailed your details. For fastest confirmation, call ${SHOP_PHONE}.`
+            : `Your request was recorded. Call ${SHOP_PHONE} to confirm.`}
         </p>
         <div className="flex flex-col justify-center gap-3 sm:flex-row">
           <a href={`tel:${SHOP_PHONE_LINK}`} className="rounded-2xl bg-teal-400 px-6 py-3 font-extrabold text-slate-950 hover:bg-teal-300">
             Call {SHOP_PHONE}
           </a>
-          <button onClick={() => setRequestSent(false)} className="rounded-2xl border border-slate-200 px-6 py-3 font-bold text-slate-700 hover:border-teal-300">
+          <button
+            onClick={() => {
+              setRequestSent(false)
+              setDelivered(false)
+            }}
+            className="rounded-2xl border border-slate-200 px-6 py-3 font-bold text-slate-700 hover:border-teal-300"
+          >
             Edit Request
           </button>
         </div>
@@ -243,8 +263,12 @@ export default function AppointmentBooking() {
               <button onClick={() => setStep(2)} className="rounded-2xl border border-slate-200 px-6 py-3 font-bold text-slate-700 hover:border-teal-300">
                 ← Back
               </button>
-              <button onClick={handleRequest} className="flex-1 rounded-2xl bg-slate-950 px-6 py-3 font-extrabold text-white shadow-xl shadow-slate-200 transition-all hover:-translate-y-0.5 hover:bg-teal-700">
-                Send Appointment Request
+              <button
+                onClick={handleRequest}
+                disabled={submitting}
+                className="flex-1 rounded-2xl bg-slate-950 px-6 py-3 font-extrabold text-white shadow-xl shadow-slate-200 transition-all hover:-translate-y-0.5 hover:bg-teal-700 disabled:cursor-wait disabled:opacity-70"
+              >
+                {submitting ? 'Sending request…' : 'Send Appointment Request'}
               </button>
             </div>
             <p className="mt-4 text-center text-sm text-slate-500">
