@@ -21,9 +21,8 @@ if (!existsSync(tasksPath)) {
   fail('TASKS.md is missing')
 } else {
   const open = [...readFileSync(tasksPath, 'utf8').matchAll(/^- \[ \] \*\*(S\d+)\*\*/gm)].map((m) => m[1])
-  const leftover = open.filter((id) => id !== 'S12')
-  if (leftover.length) {
-    fail(`TASKS.md still has incomplete items besides S12: ${leftover.join(', ')}`)
+  if (open.length) {
+    fail(`TASKS.md still has incomplete items: ${open.join(', ')}`)
   }
 }
 
