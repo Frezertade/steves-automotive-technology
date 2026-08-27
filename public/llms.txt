@@ -7,6 +7,20 @@ Phone: (717) 330-0041
 Service area: Lancaster and Millersville, PA
 Address: 1027 Dillerville Rd #16, Lancaster, PA 17603
 
+Canonical paths:
+- https://stevesautomotivetechnology.com/
+- https://stevesautomotivetechnology.com/services/hybrid-battery
+- https://stevesautomotivetechnology.com/services/inspection
+- https://stevesautomotivetechnology.com/services/brakes
+- https://stevesautomotivetechnology.com/privacy
+
+Public pages:
+- https://stevesautomotivetechnology.com/
+- https://stevesautomotivetechnology.com/services/hybrid-battery
+- https://stevesautomotivetechnology.com/services/inspection
+- https://stevesautomotivetechnology.com/services/brakes
+- https://stevesautomotivetechnology.com/privacy
+
 Primary customer message:
 - Hybrid battery repair without dealership prices.
 - Local specialist support for hybrid battery diagnostics, repair, reconditioning, and replacement decisions.
