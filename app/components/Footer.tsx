@@ -63,7 +63,7 @@ export default function Footer() {
                 { label: 'About Us', href: '/#about' },
                 { label: 'Our Services', href: '/#services' },
                 { label: 'Book Appointment', href: '/#booking' },
-                { label: 'Privacy Policy', href: '#' },
+                { label: 'Privacy Policy', href: '/privacy' },
               ].map((link) => (
                 <li key={link.label}>
                   <Link href={link.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
