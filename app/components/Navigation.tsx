@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Menu, X, Phone, Wrench } from 'lucide-react'
+import { shop, shopTelHref } from '../../lib/shop'
 
 const navLinks = [
   { label: 'Home', href: '/' },
@@ -35,12 +36,12 @@ export default function Navigation() {
         {/* Top Bar */}
         <div className={`${isScrolled ? 'hidden' : 'block'} border-b border-white/10 bg-slate-950/80 py-2 text-white backdrop-blur-xl`}>
           <div className="container-custom flex items-center justify-between text-sm">
-            <a href="tel:7173300041" className="flex items-center gap-2 font-semibold text-teal-100 transition-colors hover:text-teal-300">
+            <a href={shopTelHref} className="flex items-center gap-2 font-semibold text-teal-100 transition-colors hover:text-teal-300">
               <Phone className="h-4 w-4 text-teal-300" />
-              (717) 330-0041
+              {shop.phone}
             </a>
             <div className="hidden items-center gap-4 sm:flex">
-              <span className="text-slate-300">Mon-Fri: 8:30AM-5PM | Sat: 8:30AM-1PM</span>
+              <span className="text-slate-300">{shop.hours.nav}</span>
             </div>
           </div>
         </div>
@@ -83,7 +84,7 @@ export default function Navigation() {
                 </Link>
               ))}
               <a
-                href="tel:7173300041"
+                href={shopTelHref}
                 className="rounded-2xl bg-teal-300 px-5 py-2.5 text-sm font-black text-slate-950 shadow-lg shadow-teal-500/20 transition-all hover:-translate-y-0.5 hover:bg-white"
               >
                 Call Now
@@ -121,10 +122,10 @@ export default function Navigation() {
               </Link>
             ))}
             <a
-              href="tel:7173300041"
+              href={shopTelHref}
               className="mt-4 rounded-2xl bg-teal-300 py-4 text-center text-lg font-black text-slate-950"
             >
-              Call (717) 330-0041
+              Call {shop.phone}
             </a>
           </nav>
         </div>

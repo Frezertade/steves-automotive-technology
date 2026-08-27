@@ -1,9 +1,7 @@
 import Image from 'next/image'
 import { Phone, Calendar, ArrowRight, CheckCircle, Quote } from 'lucide-react'
 import AppointmentBooking from './AppointmentBooking'
-
-const SHOP_PHONE = '(717) 330-0041'
-const SHOP_PHONE_LINK = '7173300041'
+import { shop, shopTelHref } from '../../lib/shop'
 
 export type ServiceFaq = { question: string; answer: string }
 export type ServiceBlock = { title: string; body: string }
@@ -87,11 +85,11 @@ export default function ServiceDetail({
               <p className="mt-6 max-w-2xl text-lg leading-8 text-[#D8F3F1]">{lede}</p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
                 <a
-                  href={`tel:${SHOP_PHONE_LINK}`}
+                  href={shopTelHref}
                   className="inline-flex items-center justify-center gap-3 rounded-2xl bg-teal-300 px-7 py-4 text-lg font-extrabold text-slate-950 shadow-[0_0_34px_rgba(16,245,212,0.35)] transition-all hover:-translate-y-1 hover:bg-white"
                 >
                   <Phone className="h-5 w-5" />
-                  Call {SHOP_PHONE}
+                  Call {shop.phone}
                 </a>
                 <a
                   href="#book"
@@ -185,7 +183,7 @@ export default function ServiceDetail({
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl font-black text-slate-950 md:text-4xl">Book this service</h2>
             <p className="mx-auto max-w-2xl text-slate-600">
-              Send a preferred date and time, or call {SHOP_PHONE} for the fastest confirmation.
+              Send a preferred date and time, or call {shop.phone} for the fastest confirmation.
             </p>
           </div>
           <AppointmentBooking defaultService={defaultService} />
@@ -213,11 +211,11 @@ export default function ServiceDetail({
             Same shop, specialist answers — Lancaster & Millersville
           </p>
           <a
-            href={`tel:${SHOP_PHONE_LINK}`}
+            href={shopTelHref}
             className="inline-flex items-center gap-2 rounded-2xl bg-teal-300 px-6 py-3 font-black text-slate-950 hover:bg-white"
           >
             <Phone className="h-5 w-5" />
-            {SHOP_PHONE}
+            {shop.phone}
           </a>
         </div>
       </section>

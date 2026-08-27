@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import ServiceDetail from '../../components/ServiceDetail'
+import { shop, shopAddress } from '../../../lib/shop'
 
 export const metadata: Metadata = {
   title: 'Hybrid Battery Repair Lancaster PA',
   description:
-    "Diagnose, recondition, or replace a hybrid battery at Steve's Automotive Technology in Lancaster, PA — typically thousands less than a dealer pack. Call (717) 330-0041.",
+    `Diagnose, recondition, or replace a hybrid battery at ${shop.name} in ${shop.city}, ${shop.region} — typically thousands less than a dealer pack. Call ${shop.phone}.`,
   alternates: { canonical: '/services/hybrid-battery' },
 }
 
@@ -35,7 +36,7 @@ export default function HybridBatteryPage() {
       process={[
         {
           title: 'Call or book a diagnostic',
-          body: 'Share year, make, model, mileage, and what the dash shows. Call (717) 330-0041 or use the form on this page. Hours: Mon–Fri 8:30 AM–5:00 PM, Sat 8:30 AM–1:00 PM, Sunday closed.',
+          body: `Share year, make, model, mileage, and what the dash shows. Call ${shop.phone} or use the form on this page. Hours: ${shop.hours.summary}.`,
         },
         {
           title: 'Test the pack',
@@ -66,7 +67,7 @@ export default function HybridBatteryPage() {
         {
           question: 'How much cheaper is this than the dealer?',
           answer:
-            'Hybrid battery work here is typically thousands less than a dealer pack quote. We will not guess a dollar amount without your year/make/model, mileage, warning lights, and a diagnostic. Call (717) 330-0041 with those details.',
+            `Hybrid battery work here is typically thousands less than a dealer pack quote. We will not guess a dollar amount without your year/make/model, mileage, warning lights, and a diagnostic. Call ${shop.phone} with those details.`,
         },
         {
           question: 'Which hybrids do you work on?',
@@ -81,7 +82,7 @@ export default function HybridBatteryPage() {
         {
           question: 'Where is the shop and when are you open?',
           answer:
-            '1027 Dillerville Rd #16, Lancaster, PA 17603, serving Lancaster and Millersville. Monday–Friday 8:30 AM–5:00 PM, Saturday 8:30 AM–1:00 PM, Sunday closed. Call (717) 330-0041.',
+            `${shopAddress}, serving ${shop.areas.join(' and ')}. ${shop.hours.summary}. Call ${shop.phone}.`,
         },
       ]}
     />

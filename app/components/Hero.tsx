@@ -1,6 +1,7 @@
 'use client'
 
 import { Phone, Calendar, ArrowRight, BatteryCharging, BadgeCheck, MapPin, Gauge, ShieldCheck } from 'lucide-react'
+import { shop, shopTelHref } from '../../lib/shop'
 
 const proofPoints = [
   { icon: BatteryCharging, label: 'Hybrid Battery Specialists' },
@@ -55,11 +56,11 @@ export default function Hero() {
 
             <div className="mt-9 flex flex-col gap-4 sm:flex-row">
               <a
-                href="tel:7173300041"
+                href={shopTelHref}
                 className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-teal-300 px-7 py-4 text-lg font-extrabold text-slate-950 shadow-[0_0_34px_rgba(16,245,212,0.35)] transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_0_46px_rgba(16,245,212,0.5)] active:translate-y-0"
               >
                 <Phone className="h-5 w-5" />
-                Call (717) 330-0041
+                Call {shop.phone}
               </a>
 
               <a

@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Wrench, Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react'
+import { shop, shopMailtoHref, shopTelHref } from '../../lib/shop'
 
 export default function Footer() {
   return (
@@ -37,17 +38,10 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-lg mb-4">Services</h3>
             <ul className="space-y-2">
-              {[
-                { label: 'Hybrid Battery Repair', href: '/services/hybrid-battery' },
-                { label: 'Oil & Filter Change', href: '/#services' },
-                { label: 'Brake Service', href: '/services/brakes' },
-                { label: 'State Inspection', href: '/services/inspection' },
-                { label: 'A/C Repair', href: '/#services' },
-                { label: 'Engine Diagnostics', href: '/#services' },
-              ].map((service) => (
-                <li key={service.label}>
+              {shop.services.map((service) => (
+                <li key={service.name}>
                   <Link href={service.href} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
-                    {service.label}
+                    {service.name}
                   </Link>
                 </li>
               ))}
@@ -81,20 +75,20 @@ export default function Footer() {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-teal-400 flex-shrink-0 mt-0.5" />
                 <span className="text-gray-400 text-sm">
-                  1027 Dillerville Rd #16<br />
-                  Lancaster, PA 17603
+                  {shop.street}<br />
+                  {shop.city}, {shop.region} {shop.postalCode}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-teal-400 flex-shrink-0" />
-                <a href="tel:7173300041" className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
-                  (717) 330-0041
+                <a href={shopTelHref} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                  {shop.phone}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-teal-400 flex-shrink-0" />
-                <a href="mailto:stevesautotech@gmail.com" className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
-                  stevesautotech@gmail.com
+                <a href={shopMailtoHref} className="text-gray-400 hover:text-teal-400 transition-colors text-sm">
+                  {shop.email}
                 </a>
               </li>
             </ul>

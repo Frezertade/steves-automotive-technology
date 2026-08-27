@@ -2,10 +2,9 @@
 
 import { useState } from 'react'
 import { Phone, Clock, Wrench, ChevronRight, MessageCircle } from 'lucide-react'
+import { shop, shopTelHref } from '../../lib/shop'
 
-const SHOP_PHONE = '(717) 330-0041'
-const SHOP_PHONE_LINK = '7173300041'
-const FALLBACK = `I could not load an answer just now. Call ${SHOP_PHONE} and the shop will help.`
+const FALLBACK = `I could not load an answer just now. Call ${shop.phone} and the shop will help.`
 
 const quickReplies = [
   'Hybrid Battery',
@@ -140,13 +139,13 @@ export default function ChatBot() {
 
           <div className="border-t bg-slate-50 p-3 text-center text-xs text-slate-600">
             <div className="flex items-center justify-center gap-4">
-              <a href={`tel:${SHOP_PHONE_LINK}`} className="flex items-center gap-1 font-bold hover:text-teal-700">
+              <a href={shopTelHref} className="flex items-center gap-1 font-bold hover:text-teal-700">
                 <Phone className="h-3 w-3" />
-                {SHOP_PHONE}
+                {shop.phone}
               </a>
               <span className="flex items-center gap-1">
                 <Clock className="h-3 w-3" />
-                Mon-Fri 8:30-5
+                {shop.hours.chat}
               </span>
             </div>
           </div>

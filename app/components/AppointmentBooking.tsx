@@ -2,20 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { Calendar, Clock, Car, User, Phone, Mail, Wrench, ChevronRight, CheckCircle } from 'lucide-react'
-
-const SERVICES = [
-  'Hybrid Battery Diagnostic',
-  'Hybrid Battery Repair',
-  'Oil Change',
-  'PA State Inspection',
-  'Brake Repair',
-  'A/C Repair',
-  'Engine Diagnostics',
-  'General Service',
-]
-
-const SHOP_PHONE = '(717) 330-0041'
-const SHOP_PHONE_LINK = '7173300041'
+import { shop, shopTelHref } from '../../lib/shop'
 
 function getSlotsForDate(dateValue: string) {
   if (!dateValue) return []
@@ -89,14 +76,14 @@ export default function AppointmentBooking({
 
       const payload = await response.json().catch(() => null)
       if (!response.ok || !payload?.ok) {
-        setError(payload?.error || `Could not send the request. Call ${SHOP_PHONE} to book.`)
+        setError(payload?.error || `Could not send the request. Call ${shop.phone} to book.`)
         return
       }
 
       setDelivered(Boolean(payload.delivered))
       setRequestSent(true)
     } catch {
-      setError(`Could not send the request. Call ${SHOP_PHONE} to book.`)
+      setError(`Could not send the request. Call ${shop.phone} to book.`)
     } finally {
       setSubmitting(false)
     }
@@ -113,12 +100,12 @@ export default function AppointmentBooking({
         </h3>
         <p className="mx-auto mb-6 max-w-xl text-slate-600">
           {delivered
-            ? `Steve's team has been emailed your details. For fastest confirmation, call ${SHOP_PHONE}.`
-            : `Your request was recorded. Call ${SHOP_PHONE} to confirm.`}
+            ? `Steve's team has been emailed your details. For fastest confirmation, call ${shop.phone}.`
+            : `Your request was recorded. Call ${shop.phone} to confirm.`}
         </p>
         <div className="flex flex-col justify-center gap-3 sm:flex-row">
-          <a href={`tel:${SHOP_PHONE_LINK}`} className="rounded-2xl bg-teal-400 px-6 py-3 font-extrabold text-slate-950 hover:bg-teal-300">
-            Call {SHOP_PHONE}
+          <a href={shopTelHref} className="rounded-2xl bg-teal-400 px-6 py-3 font-extrabold text-slate-950 hover:bg-teal-300">
+            Call {shop.phone}
           </a>
           <button
             onClick={() => {
@@ -163,7 +150,7 @@ export default function AppointmentBooking({
           <div>
             <h3 className="mb-4 text-xl font-black text-slate-950">What can Steve's team help with?</h3>
             <div className="grid gap-3 sm:grid-cols-2">
-              {SERVICES.map((service) => (
+              {shop.bookingServices.map((service) => (
                 <button
                   key={service}
                   onClick={() => {
@@ -206,7 +193,7 @@ export default function AppointmentBooking({
                 </label>
                 {availableSlots.length === 0 ? (
                   <div className="rounded-2xl bg-slate-50 p-5 text-center text-slate-600">
-                    The shop is closed on Sundays. Please choose another date or call {SHOP_PHONE}.
+                    The shop is closed on Sundays. Please choose another date or call {shop.phone}.
                   </div>
                 ) : (
                   <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
@@ -276,7 +263,7 @@ export default function AppointmentBooking({
               </button>
             </div>
             <p className="mt-4 text-center text-sm text-slate-500">
-              For same-day service or urgent hybrid battery help, call <a href={`tel:${SHOP_PHONE_LINK}`} className="font-bold text-teal-700">{SHOP_PHONE}</a>.
+              For same-day service or urgent hybrid battery help, call <a href={shopTelHref} className="font-bold text-teal-700">{shop.phone}</a>.
             </p>
           </div>
         )}

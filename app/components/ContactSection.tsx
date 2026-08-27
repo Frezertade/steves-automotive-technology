@@ -2,8 +2,7 @@
 
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react'
 import { useState } from 'react'
-
-const SHOP_PHONE = '(717) 330-0041'
+import { shop, shopMailtoHref, shopMapsUrl, shopTelHref } from '../../lib/shop'
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -39,29 +38,18 @@ export default function ContactSection() {
 
       const payload = await response.json().catch(() => null)
       if (!response.ok || !payload?.ok) {
-        setError(payload?.error || `Could not send the request. Call ${SHOP_PHONE}.`)
+        setError(payload?.error || `Could not send the request. Call ${shop.phone}.`)
         return
       }
 
       setDelivered(Boolean(payload.delivered))
       setSubmitted(true)
     } catch {
-      setError(`Could not send the request. Call ${SHOP_PHONE}.`)
+      setError(`Could not send the request. Call ${shop.phone}.`)
     } finally {
       setSubmitting(false)
     }
   }
-
-  const services = [
-    'Oil Change',
-    'Hybrid Battery Repair',
-    'Brake Service',
-    'State Inspection',
-    'A/C Repair',
-    'Engine Diagnostics',
-    'General Repair',
-    'Other',
-  ]
 
   return (
     <section id="contact" className="section-padding bg-white">
@@ -72,7 +60,7 @@ export default function ContactSection() {
             Ask a Question / Request a <span className="text-teal-600">Callback</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Questions about hybrid battery repair or general service? Send a message and we will call you back, or call {SHOP_PHONE} for the fastest answer.
+            Questions about hybrid battery repair or general service? Send a message and we will call you back, or call {shop.phone} for the fastest answer.
           </p>
         </div>
 
@@ -88,8 +76,8 @@ export default function ContactSection() {
                   </h3>
                   <p className="text-gray-600 mb-6">
                     {delivered
-                      ? `Steve's team has been emailed your details. For fastest confirmation, call ${SHOP_PHONE}.`
-                      : `Your request was recorded. Call ${SHOP_PHONE} to confirm.`}
+                      ? `Steve's team has been emailed your details. For fastest confirmation, call ${shop.phone}.`
+                      : `Your request was recorded. Call ${shop.phone} to confirm.`}
                   </p>
                   <button
                     type="button"
@@ -133,7 +121,7 @@ export default function ContactSection() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                        placeholder="(717) 330-0041"
+                        placeholder={shop.phone}
                       />
                     </div>
                   </div>
@@ -161,7 +149,7 @@ export default function ContactSection() {
                       className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                     >
                       <option value="">Select a service</option>
-                      {services.map((service) => (
+                      {shop.contactServices.map((service) => (
                         <option key={service} value={service}>
                           {service}
                         </option>
@@ -200,21 +188,21 @@ export default function ContactSection() {
             {/* Info Cards */}
             <div className="grid sm:grid-cols-2 gap-6">
               <a
-                href="tel:7173300041"
+                href={shopTelHref}
                 className="bg-teal-50 rounded-xl p-6 hover:bg-teal-100 transition-colors"
               >
                 <Phone className="w-8 h-8 text-teal-600 mb-3" />
                 <h3 className="font-semibold text-slate-900 mb-1">Call Us</h3>
-                <p className="text-teal-600 font-medium">(717) 330-0041</p>
+                <p className="text-teal-600 font-medium">{shop.phone}</p>
               </a>
 
               <a
-                href="mailto:stevesautotech@gmail.com"
+                href={shopMailtoHref}
                 className="bg-teal-50 rounded-xl p-6 hover:bg-teal-100 transition-colors"
               >
                 <Mail className="w-8 h-8 text-teal-600 mb-3" />
                 <h3 className="font-semibold text-slate-900 mb-1">Email Us</h3>
-                <p className="text-teal-600 font-medium text-sm">stevesautotech@gmail.com</p>
+                <p className="text-teal-600 font-medium text-sm">{shop.email}</p>
               </a>
             </div>
 
@@ -225,8 +213,8 @@ export default function ContactSection() {
                 <div>
                   <h3 className="font-semibold text-slate-900 mb-1">Visit Our Shop</h3>
                   <p className="text-gray-600">
-                    1027 Dillerville Rd #16<br />
-                    Lancaster, PA 17603
+                    {shop.street}<br />
+                    {shop.city}, {shop.region} {shop.postalCode}
                   </p>
                 </div>
               </div>
@@ -240,16 +228,16 @@ export default function ContactSection() {
                   <h3 className="font-semibold text-slate-900 mb-3">Business Hours</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Monday - Friday</span>
-                      <span className="font-medium">8:30 AM - 5:00 PM</span>
+                      <span className="text-gray-600">{shop.hours.weekday.label}</span>
+                      <span className="font-medium">{shop.hours.weekday.time}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Saturday</span>
-                      <span className="font-medium">8:30 AM - 1:00 PM</span>
+                      <span className="text-gray-600">{shop.hours.saturday.label}</span>
+                      <span className="font-medium">{shop.hours.saturday.time}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Sunday</span>
-                      <span className="font-medium text-red-500">Closed</span>
+                      <span className="text-gray-600">{shop.hours.sunday.label}</span>
+                      <span className="font-medium text-red-500">{shop.hours.sunday.time}</span>
                     </div>
                   </div>
                 </div>
@@ -258,7 +246,7 @@ export default function ContactSection() {
 
             {/* Map Embed */}
               <a
-                href="https://www.google.com/maps/search/?api=1&query=1027%20Dillerville%20Rd%20%2316%2C%20Lancaster%2C%20PA%2017603"
+                href={shopMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative block h-64 overflow-hidden rounded-xl border border-teal-200 bg-slate-950 p-6 text-white shadow-xl"
@@ -272,8 +260,8 @@ export default function ContactSection() {
                 <div className="relative z-10 flex h-full flex-col justify-between">
                   <div>
                     <p className="text-xs font-black uppercase tracking-[0.28em] text-teal-200">Shop Location</p>
-                    <h3 className="mt-3 text-2xl font-black">1027 Dillerville Rd #16</h3>
-                    <p className="text-slate-300">Lancaster, PA 17603</p>
+                    <h3 className="mt-3 text-2xl font-black">{shop.street}</h3>
+                    <p className="text-slate-300">{shop.city}, {shop.region} {shop.postalCode}</p>
                   </div>
                   <div className="inline-flex w-fit items-center rounded-full bg-white px-4 py-2 text-sm font-black text-slate-950 transition-colors group-hover:bg-teal-200">
                     Open in Google Maps

@@ -1,23 +1,24 @@
 import type { Metadata } from 'next'
 import { Phone } from 'lucide-react'
+import { shop, shopAddress, shopMailtoHref, shopTelHref } from '../../lib/shop'
 
 export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
   description:
-    "How Steve's Automotive Technology in Lancaster, PA handles appointment requests and optional chat. We do not sell personal data. Call (717) 330-0041.",
+    `How ${shop.name} in ${shop.city}, ${shop.region} handles appointment requests and optional chat. We do not sell personal data. Call ${shop.phone}.`,
   alternates: { canonical: '/privacy' },
 }
 
 const sections = [
   {
     title: 'Appointment requests',
-    body: 'When you book online or send a callback request, we collect the details you submit — typically name, phone number, optional email, vehicle, service needed, preferred date and time, and notes. We use that information only to record the request, contact you about the appointment, and follow up on the repair. Requests may be stored on our server and emailed to stevesautotech@gmail.com when email delivery is configured.',
+    body: `When you book online or send a callback request, we collect the details you submit — typically name, phone number, optional email, vehicle, service needed, preferred date and time, and notes. We use that information only to record the request, contact you about the appointment, and follow up on the repair. Requests may be stored on our server and emailed to ${shop.email} when email delivery is configured.`,
   },
   {
     title: 'Optional chat',
-    body: 'The shop chat widget on this site is optional. If you use it, the message you type is sent to our chat service so we can answer questions about hybrid battery work, hours, and how to book. Do not send payment card numbers in chat. You can skip chat entirely and call (717) 330-0041 instead.',
+    body: `The shop chat widget on this site is optional. If you use it, the message you type is sent to our chat service so we can answer questions about hybrid battery work, hours, and how to book. Do not send payment card numbers in chat. You can skip chat entirely and call ${shop.phone} instead.`,
   },
   {
     title: 'No sale of personal data',
@@ -43,15 +44,15 @@ export default function PrivacyPage() {
               </span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#D8F3F1]">
-              Steve’s Automotive Technology at 1027 Dillerville Rd #16, Lancaster, PA 17603 collects only what we need
+              {shop.name} at {shopAddress} collects only what we need
               to answer you and schedule work. We do not sell personal data.
             </p>
             <a
-              href="tel:7173300041"
+              href={shopTelHref}
               className="mt-8 inline-flex items-center justify-center gap-3 rounded-2xl bg-teal-300 px-7 py-4 text-lg font-extrabold text-slate-950 shadow-[0_0_34px_rgba(16,245,212,0.35)] transition-all hover:-translate-y-1 hover:bg-white"
             >
               <Phone className="h-5 w-5" />
-              Call (717) 330-0041
+              Call {shop.phone}
             </a>
           </div>
         </div>
@@ -68,10 +69,10 @@ export default function PrivacyPage() {
           ))}
           <p className="text-sm leading-6 text-slate-600">
             Questions about this policy: email{' '}
-            <a href="mailto:stevesautotech@gmail.com" className="font-semibold text-teal-800 hover:text-teal-950">
-              stevesautotech@gmail.com
+            <a href={shopMailtoHref} className="font-semibold text-teal-800 hover:text-teal-950">
+              {shop.email}
             </a>{' '}
-            or call (717) 330-0041.
+            or call {shop.phone}.
           </p>
         </div>
       </section>

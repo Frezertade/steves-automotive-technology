@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import ServiceDetail from '../../components/ServiceDetail'
+import { shop, shopAddress } from '../../../lib/shop'
 
 export const metadata: Metadata = {
   title: 'PA State Inspection Lancaster',
   description:
-    "Pennsylvania safety and emissions inspections at Steve's Automotive Technology, 1027 Dillerville Rd #16, Lancaster. Call (717) 330-0041.",
+    `Pennsylvania safety and emissions inspections at ${shop.name}, ${shop.street}, ${shop.city}. Call ${shop.phone}.`,
   alternates: { canonical: '/services/inspection' },
 }
 
@@ -34,7 +35,7 @@ export default function InspectionPage() {
       process={[
         {
           title: 'Get on the schedule',
-          body: 'Call (717) 330-0041 or book a preferred time below. Hours: Monday–Friday 8:30 AM–5:00 PM, Saturday 8:30 AM–1:00 PM, Sunday closed.',
+          body: `Call ${shop.phone} or book a preferred time below. Hours: ${shop.hours.summary}.`,
         },
         {
           title: 'Inspect to the PA list',
@@ -49,7 +50,7 @@ export default function InspectionPage() {
         {
           question: 'Do you perform both safety and emissions inspections?',
           answer:
-            'Yes. Steve’s Automotive Technology handles Pennsylvania state safety and emissions inspections at 1027 Dillerville Rd #16, Lancaster, PA 17603.',
+            `Yes. ${shop.name} handles Pennsylvania state safety and emissions inspections at ${shopAddress}.`,
         },
         {
           question: 'What if my vehicle fails?',
@@ -59,7 +60,7 @@ export default function InspectionPage() {
         {
           question: 'Do I need an appointment?',
           answer:
-            'Appointments keep the wait down, especially on Saturdays (open 8:30 AM–1:00 PM). Call (717) 330-0041 for same-day availability or use the booking form.',
+            `Appointments keep the wait down, especially on Saturdays (open ${shop.hours.saturday.time}). Call ${shop.phone} for same-day availability or use the booking form.`,
         },
         {
           question: 'Can I combine inspection with hybrid battery or brake work?',
@@ -69,7 +70,7 @@ export default function InspectionPage() {
         {
           question: 'Where are you located?',
           answer:
-            '1027 Dillerville Rd #16, Lancaster, PA 17603, serving Lancaster and Millersville. Call (717) 330-0041.',
+            `${shopAddress}, serving ${shop.areas.join(' and ')}. Call ${shop.phone}.`,
         },
       ]}
     />

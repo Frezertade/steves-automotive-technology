@@ -1,11 +1,10 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { NextResponse } from 'next/server'
+import { shop } from '../../../lib/shop'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
-
-const SHOP_PHONE = '(717) 330-0041'
 const MAX_FIELD = 400
 const MAX_NOTES = 2000
 
@@ -123,13 +122,14 @@ async function emailAppointment(record: AppointmentInput & { id: string; created
   const apiKey = process.env.RESEND_API_KEY?.trim()
   if (!apiKey) return false
 
-  const to = process.env.LEAD_INBOX?.trim() || 'stevesautotech@gmail.com'
-  const from = process.env.LEAD_FROM?.trim() || "Steve's Automotive Technology <onboarding@resend.dev>"
+  const to = process.env.LEAD_INBOX?.trim() || shop.email
+  const from = process.env.LEAD_FROM?.trim() || `${shop.name} <onboarding@resend.dev>`
   const isContact = record.source === 'contact'
+  const host = new URL(shop.siteUrl).host
   const text = [
     isContact
-      ? 'New contact / callback request from stevesautomotivetechnology.com'
-      : 'New appointment request from stevesautomotivetechnology.com',
+      ? `New contact / callback request from ${host}`
+      : `New appointment request from ${host}`,
     '',
     `ID: ${record.id}`,
     `Received: ${record.createdAt}`,
@@ -143,7 +143,7 @@ async function emailAppointment(record: AppointmentInput & { id: string; created
     `Preferred time: ${record.time || 'Not provided'}`,
     `Notes: ${record.notes || 'None'}`,
     '',
-    `Call the customer or confirm at ${SHOP_PHONE}.`,
+    `Call the customer or confirm at ${shop.phone}.`,
   ].join('\n')
 
   try {

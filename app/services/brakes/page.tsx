@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import ServiceDetail from '../../components/ServiceDetail'
+import { shop } from '../../../lib/shop'
 
 export const metadata: Metadata = {
   title: 'Brake Service Lancaster PA',
   description:
-    "Brake inspection, pads, rotors, and fluid service at Steve's Automotive Technology in Lancaster, PA — including hybrid brake systems. Call (717) 330-0041.",
+    `Brake inspection, pads, rotors, and fluid service at ${shop.name} in ${shop.city}, ${shop.region} — including hybrid brake systems. Call ${shop.phone}.`,
   alternates: { canonical: '/services/brakes' },
 }
 
@@ -34,7 +35,7 @@ export default function BrakesPage() {
       process={[
         {
           title: 'Describe the symptoms',
-          body: 'Squeal, grind, pull, a soft pedal, or a brake warning light. Call (717) 330-0041 or book below with year, make, model, and mileage.',
+          body: `Squeal, grind, pull, a soft pedal, or a brake warning light. Call ${shop.phone} or book below with year, make, model, and mileage.`,
         },
         {
           title: 'Measure, don’t guess',
@@ -64,7 +65,7 @@ export default function BrakesPage() {
         {
           question: 'Can brakes be done the same day?',
           answer:
-            'Often, depending on parts and bay time. Call (717) 330-0041. Hours are Monday–Friday 8:30 AM–5:00 PM and Saturday 8:30 AM–1:00 PM; Sunday closed.',
+            `Often, depending on parts and bay time. Call ${shop.phone}. Hours are ${shop.hours.summary}.`,
         },
         {
           question: 'Will bad brakes fail my PA inspection?',
