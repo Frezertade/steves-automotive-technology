@@ -9,8 +9,8 @@ Branch: `wip/system-complete`. **Never `git push`.** Push happens once, after ev
 ## Status
 
 - current: none
-- completed: 7/12
-- last_completed: S07
+- completed: 8/12
+- last_completed: S08
 
 ## Backlog
 
@@ -21,7 +21,7 @@ Branch: `wip/system-complete`. **Never `git push`.** Push happens once, after ev
 - [x] **S05** Service detail pages. Add `/services/hybrid-battery`, `/services/inspection`, `/services/brakes` with specialist copy, FAQ, and book/call CTAs. Link from `ServicesSection` cards. Hybrid battery page is the money page. Done when: all three routes build and link from the home services grid.
 - [x] **S06** Sitemap + robots include the new service URLs. Keep canonical host `https://stevesautomotivetechnology.com`. Update `public/llms.txt` with those paths. Done when: sitemap lists `/`, the three service pages, `/privacy`.
 - [x] **S07** Privacy page at `/privacy`, footer link. State: appointment requests, optional chat, no sale of personal data. Done when: route builds and is linked.
-- [ ] **S08** Testimonials honesty. Keep the Jeremy Metze hybrid-battery quote (it reads like a real review). If other quotes are generic placeholders, label the section “Customer comments” or keep only sourced reviews. Do not invent new 5-star names. Done when: no unsourced full-name fake reviews remain.
+- [x] **S08** Testimonials honesty. Keep the Jeremy Metze hybrid-battery quote (it reads like a real review). If other quotes are generic placeholders, label the section “Customer comments” or keep only sourced reviews. Do not invent new 5-star names. Done when: no unsourced full-name fake reviews remain.
 - [ ] **S09** Shared shop constants. Create `lib/shop.ts` (phone, email, address, hours, services list) and use it from nav, footer, schema, booking, chat, contact. Done when: the phone number is not copy-pasted as a raw string in 6+ components.
 - [ ] **S10** Product README. How to run, env vars, booking API, design rules pointer to DESIGN.md, do not push until TASKS.md is complete. Done when: a stranger can run the shop site from README.
 - [ ] **S11** Smoke tests. Add `scripts/smoke.mjs` that fails if TASKS still has `- [ ]` (except after all done), if static export is still on, or if `/api/appointments` / `/api/chat` are missing. Add `npm run smoke`. Done when: `npm run smoke` and `npm run build` pass.
