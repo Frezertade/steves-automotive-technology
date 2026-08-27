@@ -7,6 +7,15 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const failures = []
 const fail = (message) => failures.push(message)
 
+function read(rel) {
+  const filePath = join(root, rel)
+  if (!existsSync(filePath)) {
+    fail(`missing ${rel}`)
+    return ''
+  }
+  return readFileSync(filePath, 'utf8')
+}
+
 const tasksPath = join(root, 'TASKS.md')
 if (!existsSync(tasksPath)) {
   fail('TASKS.md is missing')
@@ -34,6 +43,34 @@ function hasApi(name) {
 
 if (!hasApi('appointments')) fail('missing /api/appointments')
 if (!hasApi('chat')) fail('missing /api/chat')
+
+const hero = read('app/components/Hero.tsx')
+if (!/Book Hybrid Diagnostic/.test(hero)) fail('Hero missing hybrid-battery CTA')
+if (!/shop\.phone/.test(hero)) fail('Hero missing shop.phone CTA')
+if (!/hybrid-battery-diagnostic-poster\.jpg/.test(hero)) fail('Hero missing poster image')
+if (!/prefers-reduced-motion|motion-reduce|hero-poster/.test(hero)) {
+  fail('Hero missing reduced-motion fallback')
+}
+
+const home = read('app/page.tsx')
+for (const name of ['AppointmentBooking', 'ServicesSection', 'ContactSection', 'ChatBot']) {
+  if (!home.includes(name)) fail(`page.tsx missing ${name}`)
+}
+
+for (const rel of [
+  'app/components/AppointmentBooking.tsx',
+  'app/components/ServicesSection.tsx',
+  'app/components/ContactSection.tsx',
+  'app/components/ChatBot.tsx',
+  'app/services/hybrid-battery/page.tsx',
+  'app/services/inspection/page.tsx',
+  'app/services/brakes/page.tsx',
+]) {
+  if (!existsSync(join(root, rel))) fail(`missing ${rel}`)
+}
+
+const globals = read('app/globals.css')
+if (!/prefers-reduced-motion/.test(globals)) fail('globals.css missing prefers-reduced-motion')
 
 if (failures.length) {
   console.error('smoke failed:')
