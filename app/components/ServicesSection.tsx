@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { ClipboardCheck, Car, Battery, Droplets, Wind, Settings, ArrowRight } from 'lucide-react'
 
 const services = [
@@ -9,6 +10,8 @@ const services = [
     description: 'Specialized hybrid battery diagnostics, repair, reconditioning, and replacement. Save thousands vs dealership prices on Prius, Camry, Lexus, and other hybrids.',
     features: ['Cell Replacement', 'Reconditioning', 'Warranty Available'],
     featured: true,
+    href: '/services/hybrid-battery',
+    cta: 'View hybrid battery repair',
   },
   {
     icon: Droplets,
@@ -21,6 +24,8 @@ const services = [
     title: 'State Inspection',
     description: 'Pennsylvania state safety and emissions inspections. We identify issues before they become costly repairs, keeping you legal and safe.',
     features: ['Safety Inspection', 'Emissions Testing', 'Pre-Inspection Check'],
+    href: '/services/inspection',
+    cta: 'View inspection details',
   },
   {
     icon: Wind,
@@ -33,6 +38,8 @@ const services = [
     title: 'Brake Service',
     description: 'Expert brake inspection, pad replacement, rotor resurfacing, and full brake system repairs for all vehicle makes and models.',
     features: ['Pad Replacement', 'Rotor Service', 'Fluid Flush'],
+    href: '/services/brakes',
+    cta: 'View brake service',
   },
   {
     icon: Settings,
@@ -92,13 +99,13 @@ export default function ServicesSection() {
                 </ul>
 
                 {/* CTA */}
-                <a
-                  href="#booking"
+                <Link
+                  href={service.href || '/#booking'}
                   className={`inline-flex items-center gap-2 font-black transition-colors ${service.featured ? 'text-teal-200 hover:text-white' : 'text-teal-700 hover:text-slate-950'}`}
                 >
-                  Get a Quote
+                  {service.cta || 'Get a Quote'}
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
             </div>
           ))}

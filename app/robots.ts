@@ -6,7 +6,13 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
-      allow: '/',
+      allow: [
+        '/',
+        '/services/hybrid-battery',
+        '/services/inspection',
+        '/services/brakes',
+        '/privacy',
+      ],
     },
     sitemap: 'https://stevesautomotivetechnology.com/sitemap.xml',
   }

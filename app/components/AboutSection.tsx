@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { MapPin, Phone, CheckCircle } from 'lucide-react'
+import { shop, shopTelHref } from '../../lib/shop'
 
 export default function AboutSection() {
   return (
@@ -50,9 +51,9 @@ export default function AboutSection() {
 
             {/* Contact Info */}
             <div className="flex flex-wrap gap-6">
-              <a href="tel:7173300041" className="flex items-center gap-2 text-white hover:text-teal-200 transition-colors">
+              <a href={shopTelHref} className="flex items-center gap-2 text-white hover:text-teal-200 transition-colors">
                 <Phone className="w-5 h-5" />
-                <span className="font-semibold">(717) 330-0041</span>
+                <span className="font-semibold">{shop.phone}</span>
               </a>
               <div className="flex items-center gap-2 text-teal-100">
                 <MapPin className="w-5 h-5" />
