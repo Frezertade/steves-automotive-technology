@@ -83,18 +83,27 @@ function keywordReply(message: string) {
 }
 
 async function openaiReply(message: string) {
-  const apiKey = process.env.OPENAI_API_KEY?.trim()
+  // Prefer Vercel AI Gateway; fall back to direct OpenAI only if Gateway key missing.
+  const gatewayKey = process.env.AI_GATEWAY_API_KEY?.trim()
+  const openaiKey = process.env.OPENAI_API_KEY?.trim()
+  const apiKey = gatewayKey || openaiKey
   if (!apiKey) return null
 
+  const viaGateway = Boolean(gatewayKey)
+  const baseUrl = viaGateway
+    ? 'https://ai-gateway.vercel.sh/v1'
+    : 'https://api.openai.com/v1'
+  const model = viaGateway ? 'openai/gpt-4o-mini' : 'gpt-4o-mini'
+
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+    const res = await fetch(`${baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model,
         temperature: 0.2,
         max_tokens: 280,
         messages: [
@@ -113,7 +122,7 @@ async function openaiReply(message: string) {
     })
 
     if (!res.ok) {
-      console.error('[chat] OpenAI failed:', res.status, await res.text())
+      console.error('[chat] AI failed:', res.status, await res.text())
       return null
     }
 
@@ -124,7 +133,7 @@ async function openaiReply(message: string) {
     if (typeof text !== 'string' || !text.trim()) return null
     return text.trim()
   } catch (error) {
-    console.error('[chat] OpenAI threw:', error)
+    console.error('[chat] AI threw:', error)
     return null
   }
 }
